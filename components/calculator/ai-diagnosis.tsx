@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CalorieInput, CalorieResult } from '@/types/calculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Progress } from '@/components/ui/progress';
 
 interface AIDiagnosisProps {
   input: CalorieInput;
@@ -17,10 +18,37 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
   const [diagnosis, setDiagnosis] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(0);
+  const [progress, setProgress] = useState(0);
+  
+  const ESTIMATED_TIME = 8; // 예상 소요 시간 (초)
+
+  // 카운트다운 및 진행률 업데이트
+  useEffect(() => {
+    if (loading) {
+      setCountdown(ESTIMATED_TIME);
+      setProgress(0);
+      
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 0) return 0;
+          return prev - 1;
+        });
+        
+        setProgress((prev) => {
+          if (prev >= 95) return 95; // 최대 95%까지만
+          return prev + (100 / ESTIMATED_TIME);
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [loading]);
 
   async function handleGenerateDiagnosis() {
     setLoading(true);
     setError(null);
+    setDiagnosis(null);
 
     try {
       const response = await fetch('/api/health-diagnosis', {
@@ -47,6 +75,7 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
       }
 
       const data = await response.json();
+      setProgress(100); // 완료 시 100%
       setDiagnosis(data.diagnosis);
     } catch (err) {
       setError('AI 진단을 생성하는 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -82,11 +111,39 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
         )}
 
         {loading && (
-          <div className="text-center py-12 space-y-4">
-            <Loader2 className="h-12 w-12 animate-spin mx-auto text-purple-600" />
-            <p className="text-muted-foreground">
-              AI가 당신의 건강 상태를 분석하고 있습니다...
-            </p>
+          <div className="text-center py-12 space-y-6">
+            <div className="relative">
+              <Loader2 className="h-16 w-16 animate-spin mx-auto text-purple-600" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-purple-600">
+                  {countdown}
+                </span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <p className="text-lg font-semibold text-foreground">
+                AI가 건강 상태를 분석하고 있습니다
+              </p>
+              <p className="text-sm text-muted-foreground">
+                예상 소요 시간: 약 {countdown}초
+              </p>
+            </div>
+
+            {/* 진행률 바 */}
+            <div className="max-w-md mx-auto space-y-2">
+              <Progress value={progress} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {Math.round(progress)}% 완료
+              </p>
+            </div>
+
+            {/* 로딩 팁 */}
+            <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-950 rounded-lg max-w-md mx-auto">
+              <p className="text-xs text-muted-foreground">
+                💡 <strong>잠깐!</strong> AI가 당신의 나이, 체중, BMI, 활동량 등을 종합적으로 분석하여 맞춤형 건강 조언을 생성하고 있습니다.
+              </p>
+            </div>
           </div>
         )}
 
