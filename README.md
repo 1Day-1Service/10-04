@@ -52,7 +52,7 @@
 - **Styling**: Tailwind CSS v4
 - **UI Components**: Shadcn UI
 - **Icons**: Lucide React
-- **AI**: Google Gemini 2.0 Flash (Experimental)
+- **AI**: Google Gemini 2.5 Flash
 
 ---
 
