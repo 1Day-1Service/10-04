@@ -21,7 +21,7 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
   const [countdown, setCountdown] = useState(0);
   const [progress, setProgress] = useState(0);
   
-  const ESTIMATED_TIME = 8; // 예상 소요 시간 (초)
+  const ESTIMATED_TIME = 15; // 예상 소요 시간 (초)
 
   // 카운트다운 및 진행률 업데이트
   useEffect(() => {
