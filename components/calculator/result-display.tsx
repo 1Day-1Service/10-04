@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BMIGauge } from './bmi-gauge';
 import { WeightRange } from './weight-range';
 import { CalorieCards } from './calorie-cards';
+import { AIDiagnosis } from './ai-diagnosis';
 import { ArrowLeft } from 'lucide-react';
 
 interface ResultDisplayProps {
@@ -36,6 +37,9 @@ export function ResultDisplay({ input, result, onReset }: ResultDisplayProps) {
 
       {/* 칼로리 카드 */}
       <CalorieCards result={result} />
+
+      {/* AI 건강 진단 */}
+      <AIDiagnosis input={input} result={result} />
 
       {/* 다시 계산 버튼 */}
       <div className="flex justify-center pt-4">

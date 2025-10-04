@@ -110,7 +110,7 @@ export function InputForm({ onCalculate }: InputFormProps) {
 
           {/* 나이 */}
           <div className="space-y-2">
-            <Label htmlFor="age">나이 (세)</Label>
+            <Label htmlFor="age">나이 (만 나이)</Label>
             <Input
               id="age"
               type="number"
@@ -122,6 +122,9 @@ export function InputForm({ onCalculate }: InputFormProps) {
             {errors.age && (
               <p className="text-sm text-red-500">{errors.age}</p>
             )}
+            <p className="text-xs text-muted-foreground">
+              * 만 나이를 입력해주세요 (생일이 지나지 않았다면 한국 나이 - 1)
+            </p>
           </div>
 
           {/* 성별 */}
