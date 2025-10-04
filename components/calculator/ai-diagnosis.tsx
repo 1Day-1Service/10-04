@@ -105,10 +105,9 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
 
         {diagnosis && (
           <div className="space-y-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert">
+            <div className="prose prose-sm max-w-none dark:prose-invert text-sm leading-relaxed">
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm]}
-                className="text-sm leading-relaxed"
                 components={{
                   h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-6 mb-4" {...props} />,
                   h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-5 mb-3" {...props} />,
