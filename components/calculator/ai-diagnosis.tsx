@@ -5,6 +5,8 @@ import { CalorieInput, CalorieResult } from '@/types/calculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface AIDiagnosisProps {
   input: CalorieInput;
@@ -103,10 +105,26 @@ export function AIDiagnosis({ input, result }: AIDiagnosisProps) {
 
         {diagnosis && (
           <div className="space-y-4">
-            <div className="prose prose-sm max-w-none">
-              <div className="whitespace-pre-wrap text-sm leading-relaxed">
+            <div className="prose prose-sm max-w-none dark:prose-invert">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                className="text-sm leading-relaxed"
+                components={{
+                  h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-6 mb-4" {...props} />,
+                  h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-5 mb-3" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-4 mb-2" {...props} />,
+                  p: ({node, ...props}) => <p className="mb-3 leading-relaxed" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc list-inside mb-3 space-y-1" {...props} />,
+                  ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-3 space-y-1" {...props} />,
+                  li: ({node, ...props}) => <li className="ml-2" {...props} />,
+                  strong: ({node, ...props}) => <strong className="font-bold text-foreground" {...props} />,
+                  em: ({node, ...props}) => <em className="italic" {...props} />,
+                  code: ({node, ...props}) => <code className="bg-muted px-1.5 py-0.5 rounded text-sm" {...props} />,
+                  blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-4 italic my-3" {...props} />,
+                }}
+              >
                 {diagnosis}
-              </div>
+              </ReactMarkdown>
             </div>
 
             <div className="pt-4 border-t">
